@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import static net.logstash.logback.argument.StructuredArguments.v;
+
 import com.google.gson.Gson;
 
 @SpringBootApplication
@@ -53,24 +55,21 @@ public class SpringbootAppApplication {
 		String txID = UUID.randomUUID().toString();
 
 		ThreadContext.put("txID", txID);
-		ThreadContext.put("value1", "1");
 
-		// sample {"@timestamp":"2019-09-17T15:31:31.243+08:00","appName":"test-log-app","level":"INFO","class":"com.example.test.springbootapp.SpringbootAppApplication","method":"testLogging","file":"SpringbootAppApplication.java","line":29,"thread":"main","value1":"1","txID":"6e057f1b-c8c0-45ae-a69e-e6b30e2b135b","msg":"this is a test log message"}
-		log.info("this is a test log message");
+		// sample {"@timestamp":"2019-09-18T10:25:07.662+08:00","appName":"test-log-app","level":"INFO","class":"com.example.test.springbootapp.SpringbootAppApplication","method":"testLogging","file":"SpringbootAppApplication.java","line":60,"thread":"main","txID":"cbd75e44-3ccd-41a0-a19c-e537476befe5","value1":1,"msg":"this is a test log message"}
 
-		//ThreadContext.remove("value1");
-		ThreadContext.put("value2", "2");
+		log.info("this is a test log message", v("value1", 1));
 
-		// sample {"@timestamp":"2019-09-17T15:31:31.258+08:00","appName":"test-log-app","level":"INFO","class":"com.example.test.springbootapp.SpringbootAppApplication","method":"testLogging","file":"SpringbootAppApplication.java","line":34,"thread":"main","value2":"2","value1":"1","txID":"6e057f1b-c8c0-45ae-a69e-e6b30e2b135b","msg":"this is a 2nd test log message"}
-		log.info("this is a 2nd test log message");
+		// sample {"@timestamp":"2019-09-18T10:25:07.693+08:00","appName":"test-log-app","level":"INFO","class":"com.example.test.springbootapp.SpringbootAppApplication","method":"testLogging","file":"SpringbootAppApplication.java","line":63,"thread":"main","txID":"cbd75e44-3ccd-41a0-a19c-e537476befe5","value2":2,"msg":"this is a 2nd test log message"}
+
+		log.info("this is a 2nd test log message", v("value2", 2));
 		
 		TestObj testObj = new TestObj(11111, "content of test obj");
 		
-		ThreadContext.put("testObj1", new Gson().toJson(testObj));
-		// sample {"@timestamp":"2019-09-17T16:17:55.052+08:00","appName":"test-log-app","level":"INFO","class":"com.example.test.springbootapp.SpringbootAppApplication","method":"testLogging","file":"SpringbootAppApplication.java","line":70,"thread":"main","txID":"eedfa29e-29b0-40c6-9ff6-fb41c131cc1c","value2":"2","value1":"1","testObj1":"{\"id\":11111,\"content\":\"content of test obj\"}","msg":"testing obj in context"}
-		log.info("testing obj in context");
+		// sample {"@timestamp":"2019-09-18T10:26:20.142+08:00","appName":"test-log-app","level":"INFO","class":"com.example.test.springbootapp.SpringbootAppApplication","method":"testLogging","file":"SpringbootAppApplication.java","line":71,"thread":"main","txID":"d537dccd-0534-45f8-810d-960768f85585","obj1":{"id":11111,"content":"content of test obj"},"msg":"testing obj in context"}
+
+		log.info("testing obj in context", v("obj1", testObj));
 		
-		ThreadContext.remove("testObj1");
 		
 		try {
 			throw new Exception("test exception");
@@ -78,7 +77,6 @@ public class SpringbootAppApplication {
 			log.error("caught an error!", e);
 		}
 		
-		ThreadContext.clearAll();
 	}
 
 }

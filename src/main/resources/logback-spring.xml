@@ -28,9 +28,9 @@
 					<fieldName>thread</fieldName>
 				</threadName>
 				<mdc />
-				<!-- <arguments>
+				<arguments>
 					<includeNonStructuredArguments>false</includeNonStructuredArguments>
-				</arguments> -->
+				</arguments>
 				<stackTrace>
 					<fieldName>exception</fieldName>
 				</stackTrace>
