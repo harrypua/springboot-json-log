@@ -1,5 +1,11 @@
 # springboot-json-log
 
+## Techniques used
+
+1. src/main/resources/logback-spring.xml  
+This config file defines the json format of the log for system values.
+
+2. ThreadContext (MDC)  
 We can use `ThreadContext` to add in additional context to all logs within 1 flow, most commonly transanction id:
 
 ```java
@@ -7,7 +13,17 @@ String txID = UUID.randomUUID().toString();
 ThreadContext.put("txID", txID);
 ```
 
-## sample log output
+3. Structured Arguements  
+Use Structured Arguements to add in additional key/value pairs per-log-line.
+
+```java
+log.info("this is a test log message", v("value1", 1));
+
+TestObj testObj = new TestObj(11111, "content of test obj");
+log.info("testing obj in context", v("obj1", testObj));
+```
+
+## Sample log output
 
 ```json
 # first call to /
